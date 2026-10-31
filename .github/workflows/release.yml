@@ -1,0 +1,44 @@
+name: Package plugin release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Create plugin zip
+        run: |
+          set -euo pipefail
+          slug="gb-abs-img-positioning"
+          rm -rf build
+          mkdir -p "build/${slug}"
+          rsync -a \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "build" \
+            --exclude ".DS_Store" \
+            ./ "build/${slug}/"
+          (
+            cd build
+            zip -qr "${slug}.zip" "${slug}"
+          )
+          unzip -l "build/${slug}.zip" | head -n 20
+
+      - name: Attach zip to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            "build/gb-abs-img-positioning.zip" \
+            --repo "${{ github.repository }}" \
+            --clobber
