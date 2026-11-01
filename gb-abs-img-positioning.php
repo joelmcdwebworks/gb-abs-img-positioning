@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GenerateBlocks Absolute Image Positioning
  * Description: Adds a focal point picker above the GenerateBlocks "Object Position" field and writes the selection to it. Also fixes issue where an absolutely positioned image disappears when selected in the block editor.
- * Version:     1.3.2
+ * Version:     1.3.3
  * Author:      Joel McDonald | McDonald Web Works
  * Author URI:  https://mcdwebworks.com
  * Plugin URI:  https://github.com/joelmcdwebworks/gb-abs-img-positioning
@@ -46,14 +46,12 @@ add_action( 'enqueue_block_editor_assets', function () {
 } );
 
 /**
- * Stretch GenerateBlocks media blocks to fill their container in the block editor,
- * and keep the block appender in place on absolutely positioned containers.
+ * Stretch GenerateBlocks media blocks to fill their container in the block editor.
  */
 function pcil_enqueue_generateblocks_media_editor_styles() {
 	wp_add_inline_style(
 		'wp-edit-blocks',
 		'.editor-styles-wrapper .block-editor-block-list__block.wp-block-generateblocks-media { position: absolute; inset: 0; }'
-		. '.editor-styles-wrapper .block-editor-block-list__block:has(.wp-block-generateblocks-media) > .block-list-appender { position: absolute; }'
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'pcil_enqueue_generateblocks_media_editor_styles' );
